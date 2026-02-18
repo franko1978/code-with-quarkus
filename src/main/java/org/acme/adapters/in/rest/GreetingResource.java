@@ -1,10 +1,14 @@
-package org.acme;
+package org.acme.adapters.in.rest;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
+/**
+ * REST adapter for greeting functionality.
+ * Simple endpoint for testing basic REST capabilities.
+ */
 @Path("/hello")
 public class GreetingResource {
 
@@ -14,3 +18,4 @@ public class GreetingResource {
         return "Hello from Quarkus REST";
     }
 }
+

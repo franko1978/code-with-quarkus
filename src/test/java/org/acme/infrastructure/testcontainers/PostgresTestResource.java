@@ -1,4 +1,4 @@
-package org.acme;
+package org.acme.infrastructure.testcontainers;
 
 import io.quarkus.test.common.QuarkusTestResourceLifecycleManager;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -6,6 +6,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Testcontainers PostgreSQL resource for integration tests.
+ * Provides PostgreSQL container and datasource configuration.
+ */
 public class PostgresTestResource implements QuarkusTestResourceLifecycleManager {
     private PostgreSQLContainer<?> postgres;
 
