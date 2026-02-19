@@ -78,12 +78,4 @@ public class ProductService {
         }
         productRepository.delete(id);
     }
-
-    /**
-     * Deletes all products and resets ID sequence.
-     * Use with caution in production!
-     */
-    public void deleteAllProducts() {
-        productRepository.deleteAll();
-    }
 }

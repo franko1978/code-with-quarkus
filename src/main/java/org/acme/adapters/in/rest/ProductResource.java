@@ -99,16 +99,6 @@ public class ProductResource {
         }
     }
 
-    /**
-     * Deletes all products and resets ID sequence.
-     *
-     * @return 204 No Content
-     */
-    @DELETE
-    public Response deleteAllProducts() {
-        productService.deleteAllProducts();
-        return Response.noContent().build();
-    }
 
     private ProductResponse toResponse(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getDescription());
