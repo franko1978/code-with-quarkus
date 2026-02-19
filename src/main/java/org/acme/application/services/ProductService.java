@@ -1,5 +1,7 @@
 package org.acme.application.services;
 
+import org.acme.application.events.ProductEventType;
+import org.acme.application.ports.ProductEventPublisher;
 import org.acme.application.ports.ProductRepository;
 import org.acme.domain.Product;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,6 +23,9 @@ public class ProductService {
     @Inject
     ProductRepository productRepository;
 
+    @Inject
+    ProductEventPublisher productEventPublisher;
+
     /**
      * Creates a new product with validation.
      *
@@ -40,7 +45,9 @@ public class ProductService {
 
         // Domain object validates business rules via constructor
         Product product = new Product(name, description);
-        return productRepository.save(product);
+        Product saved = productRepository.save(product);
+        productEventPublisher.publish(ProductEventType.CREATED, saved.getId());
+        return saved;
     }
 
     /**
@@ -77,5 +84,29 @@ public class ProductService {
             throw new IllegalArgumentException("Product ID must be a positive number");
         }
         productRepository.delete(id);
+    }
+
+    /**
+     * Updates a product by ID.
+     *
+     * @param id product ID
+     * @param name updated product name
+     * @param description updated product description
+     * @return updated product if found
+     */
+    public Optional<Product> updateProduct(Long id, String name, String description) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Product ID must be a positive number");
+        }
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Product name cannot be null or empty");
+        }
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("Product description cannot be null or empty");
+        }
+
+        Optional<Product> updated = productRepository.update(id, name, description);
+        updated.ifPresent(p -> productEventPublisher.publish(ProductEventType.UPDATED, p.getId()));
+        return updated;
     }
 }

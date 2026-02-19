@@ -43,8 +43,19 @@ public class ProductPanacheRepository implements ProductRepository {
         ProductEntity.deleteById(id);
     }
 
+    @Override
+    public Optional<Product> update(Long id, String name, String description) {
+        ProductEntity entity = ProductEntity.findById(id);
+        if (entity == null) {
+            return Optional.empty();
+        }
+        entity.name = name;
+        entity.description = description;
+        entity.persist();
+        return Optional.of(toDomain(entity));
+    }
+
     private Product toDomain(ProductEntity entity) {
         return new Product(entity.id, entity.name, entity.description);
     }
 }
-

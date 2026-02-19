@@ -17,4 +17,6 @@ public interface ProductRepository {
     List<Product> findAll();
 
     void delete(Long id);
+
+    Optional<Product> update(Long id, String name, String description);
 }

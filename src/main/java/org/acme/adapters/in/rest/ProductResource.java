@@ -99,6 +99,33 @@ public class ProductResource {
         }
     }
 
+    /**
+     * Updates an existing product by ID.
+     *
+     * @param id product ID
+     * @param request validated request with name and description
+     * @return 200 OK with updated product, or 404 if not found
+     */
+    @PUT
+    @Path("/{id}")
+    public Response updateProduct(@PathParam("id") Long id, @Valid CreateProductRequest request) {
+        try {
+            return productService.updateProduct(id, request.name, request.description)
+                    .map(p -> Response.ok(toResponse(p)).build())
+                    .orElse(Response.status(Response.Status.NOT_FOUND)
+                            .entity(new ErrorResponse("NOT_FOUND", "Product with ID " + id + " not found"))
+                            .build());
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new ErrorResponse("VALIDATION_ERROR", e.getMessage()))
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new ErrorResponse("INTERNAL_ERROR", "An unexpected error occurred"))
+                    .build();
+        }
+    }
+
 
     private ProductResponse toResponse(Product product) {
         return new ProductResponse(product.getId(), product.getName(), product.getDescription());
